@@ -14,7 +14,7 @@ Converting a single static `index.html` (830 lines, 18 DevOps tools) into a prod
 
 ## Tech Stack
 
-| Layer | Technology |
+| Layer | Technology | 
 |-------|-----------|
 | Frontend | React 18 + Vite + TypeScript |
 | Styling | Tailwind CSS |

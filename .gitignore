@@ -49,3 +49,4 @@ pgdata/
 
 # Claude config (local only)
 .claude/
+plan.md
