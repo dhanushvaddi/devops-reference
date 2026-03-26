@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevOps & SRE Interview Quick Reference | master.devops</title>
+
+<!-- ✅ SEO Meta Tags -->
+<meta name="description" content="Free DevOps & SRE Interview Quick Reference — 18 tools covered: Kubernetes, Docker, Terraform, AWS, Azure, ArgoCD, Prometheus, Helm, Jenkins and more. By master.devops.">
+<meta name="keywords" content="DevOps interview, SRE interview, Kubernetes interview questions, Docker interview, Terraform, AWS, Jenkins, ArgoCD, Prometheus, Helm, interview prep, DevOps cheatsheet">
+<meta name="author" content="master.devops — @master.devops on Instagram">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://devops-reference.netlify.app/">
+
+<!-- ✅ Open Graph (for social sharing) -->
+<meta property="og:title" content="DevOps & SRE Interview Quick Reference | master.devops">
+<meta property="og:description" content="Free DevOps & SRE Interview reference covering 18 tools — Kubernetes, Docker, AWS, Terraform, Jenkins, ArgoCD, Prometheus & more. Built by @master.devops.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://devops-reference.netlify.app/">
+<meta property="og:site_name" content="master.devops">
+
+<!-- ✅ Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free DevOps & SRE Interview Reference | master.devops">
+<meta name="twitter:description" content="18 tools covered: Kubernetes, Docker, AWS, Terraform, ArgoCD, Prometheus & more. Daily DevOps tips @master.devops">
+
+<!-- ✅ Google AdSense — Replace ca-pub-XXXXXXXXXX with your Publisher ID after approval -->
+<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX" crossorigin="anonymous"></script> -->
+
+<style>
+  :root {
+    --blue: #1E5FA3; --blue-light: #D6E4F0; --blue-dark: #0d3d6e;
+    --green: #0F6E56; --green-light: #D4EDDA;
+    --orange: #CC5500; --orange-light: #FFF3E0;
+    --red: #C0392B; --red-light: #FADBD8;
+    --purple: #6C3483; --purple-light: #E8DAEF;
+    --gray: #2C3E50; --gray-light: #F4F6F9; --gray-mid: #BDC3C7;
+    --code-bg: #1E1E2E; --code-text: #D4D4D4;
+    --text: #2C3E50; --muted: #7F8C8D;
+    --border: #E0E0E0;
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F0F3F7; color: var(--text); }
+
+  /* TOP NAV */
+  .topbar { background: var(--blue-dark); color: white; padding: 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .topbar-inner { display: flex; align-items: center; gap: 0; max-width: 1400px; margin: 0 auto; }
+  .brand { padding: 14px 20px; font-size: 16px; font-weight: 700; white-space: nowrap; border-right: 1px solid rgba(255,255,255,0.15); }
+  .brand span { color: #64B5F6; }
+  .nav-scroll { display: flex; overflow-x: auto; gap: 2px; padding: 0 10px; flex: 1; }
+  .nav-scroll::-webkit-scrollbar { height: 3px; }
+  .nav-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 2px; }
+  .nav-btn { padding: 16px 14px; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7); cursor: pointer; white-space: nowrap; border-bottom: 3px solid transparent; transition: all .15s; letter-spacing: .3px; }
+  .nav-btn:hover { color: white; background: rgba(255,255,255,0.08); }
+  .nav-btn.active { color: white; border-bottom-color: #64B5F6; background: rgba(100,181,246,0.12); }
+
+  /* LAYOUT */
+  .main { max-width: 1400px; margin: 0 auto; padding: 24px 20px; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* HOME PAGE */
+  .home-hero { background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%); color: white; border-radius: 12px; padding: 40px; margin-bottom: 24px; }
+  .home-hero h1 { font-size: 28px; margin-bottom: 8px; }
+  .home-hero p { font-size: 15px; opacity: .8; line-height: 1.6; }
+  .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .tool-card { background: white; border-radius: 10px; padding: 16px; cursor: pointer; border: 1.5px solid var(--border); transition: all .15s; box-shadow: var(--shadow); }
+  .tool-card:hover { border-color: var(--blue); box-shadow: 0 4px 16px rgba(30,95,163,0.15); transform: translateY(-2px); }
+  .tool-icon { font-size: 28px; margin-bottom: 8px; }
+  .tool-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .tool-cat { font-size: 11px; color: var(--muted); }
+  .cat-badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 700; margin-top: 6px; }
+  .cat-core { background: var(--blue-light); color: var(--blue); }
+  .cat-security { background: var(--orange-light); color: var(--orange); }
+  .cat-obs { background: var(--green-light); color: var(--green); }
+  .cat-cloud { background: var(--purple-light); color: var(--purple); }
+
+  /* TOOL PAGE */
+  .tool-header { background: white; border-radius: 12px; padding: 28px 32px; margin-bottom: 20px; box-shadow: var(--shadow); border-left: 6px solid var(--blue); }
+  .tool-header h1 { font-size: 26px; color: var(--blue); margin-bottom: 6px; }
+  .tool-header p { color: var(--muted); font-size: 14px; line-height: 1.7; max-width: 800px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .one-col { margin-bottom: 20px; }
+  @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+
+  .card { background: white; border-radius: 10px; padding: 20px 24px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+  .card h3 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+  /* CONCEPT BULLETS */
+  .bullet-list { list-style: none; }
+  .bullet-list li { font-size: 13px; line-height: 1.65; padding: 5px 0 5px 18px; position: relative; color: var(--text); border-bottom: 1px solid #F5F5F5; }
+  .bullet-list li:last-child { border-bottom: none; }
+  .bullet-list li::before { content: "▸"; position: absolute; left: 0; color: var(--blue); font-size: 11px; top: 7px; }
+
+  /* CODE BLOCK */
+  .code-block { background: var(--code-bg); border-radius: 8px; padding: 16px; overflow-x: auto; margin-top: 10px; border-left: 4px solid #569CD6; }
+  .code-block pre { color: var(--code-text); font-family: 'Fira Code', 'Courier New', monospace; font-size: 12px; line-height: 1.7; white-space: pre; }
+  .code-comment { color: #6A9955; }
+  .code-key { color: #569CD6; }
+  .code-val { color: #CE9178; }
+
+  /* Q&A */
+  .qa-item { margin-bottom: 12px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .qa-question { background: var(--blue-light); padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--blue); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .qa-question:hover { background: #C5D9EE; }
+  .qa-toggle { font-size: 16px; flex-shrink: 0; transition: transform .2s; }
+  .qa-answer { padding: 12px 16px; font-size: 13px; color: var(--text); line-height: 1.7; display: none; background: white; }
+  .qa-item.open .qa-answer { display: block; }
+  .qa-item.open .qa-toggle { transform: rotate(45deg); }
+
+  /* TIP BOX */
+  .tip-box { background: var(--green-light); border-left: 5px solid var(--green); border-radius: 0 8px 8px 0; padding: 14px 18px; font-size: 13px; line-height: 1.7; color: #1a4a3a; margin-top: 4px; }
+  .tip-box strong { color: var(--green); }
+
+  /* CONCEPT TABLE */
+  .concept-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .concept-table th { background: var(--blue); color: white; padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 600; }
+  .concept-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+  .concept-table tr:nth-child(even) td { background: var(--gray-light); }
+  .concept-table tr:last-child td { border-bottom: none; }
+
+  /* ANSWER TEMPLATE */
+  .answer-template { background: #1E1E2E; border-radius: 8px; padding: 16px 20px; font-size: 13px; color: #D4D4D4; line-height: 1.8; font-style: italic; margin-top: 8px; border-left: 4px solid #6A9955; }
+  .answer-template .highlight { color: #DCDCAA; font-style: normal; font-weight: 600; }
+
+  /* PROGRESS TRACKER */
+  .tracker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+  .tracker-item { background: white; border-radius: 8px; padding: 12px 14px; border: 1.5px solid var(--border); cursor: pointer; transition: all .15s; display: flex; align-items: center; gap: 10px; }
+  .tracker-item.done { border-color: var(--green); background: var(--green-light); }
+  .tracker-item.done .tracker-name { color: var(--green); }
+  .tracker-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--gray-mid); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; transition: all .15s; }
+  .tracker-item.done .tracker-check { background: var(--green); border-color: var(--green); color: white; }
+  .tracker-name { font-size: 12px; font-weight: 600; color: var(--text); }
+  .tracker-icon { font-size: 16px; }
+  .progress-bar-wrap { background: var(--border); border-radius: 99px; height: 8px; margin: 16px 0 8px; }
+  .progress-bar { height: 8px; border-radius: 99px; background: var(--green); transition: width .3s; }
+  .progress-label { font-size: 12px; color: var(--muted); }
+
+  /* SECTION TABS */
+  .section-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .sec-tab { padding: 6px 14px; font-size: 12px; font-weight: 600; border-radius: 99px; cursor: pointer; border: 1.5px solid var(--border); background: white; color: var(--muted); transition: all .15s; }
+  .sec-tab.active { background: var(--blue); color: white; border-color: var(--blue); }
+
+  .back-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: white; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--blue); cursor: pointer; margin-bottom: 16px; box-shadow: var(--shadow); transition: all .15s; }
+  .back-btn:hover { background: var(--blue-light); }
+
+  footer { text-align: center; padding: 24px; font-size: 12px; color: var(--muted); }
+
+  /* PROMO BANNER */
+  .promo-banner {
+    background: linear-gradient(90deg, #0d3d6e 0%, #1E5FA3 50%, #0d3d6e 100%);
+    color: white; text-align: center; padding: 9px 20px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.3px;
+    display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+  }
+  .promo-banner a { color: #64B5F6; text-decoration: none; font-weight: 700; }
+  .promo-banner a:hover { text-decoration: underline; }
+  .promo-sep { opacity: 0.35; }
+
+  /* TOPMATE CTA CARD */
+  .cta-card {
+    background: linear-gradient(135deg, #0d3d6e 0%, #1E5FA3 100%);
+    color: white; border-radius: 12px; padding: 22px 28px;
+    margin-bottom: 24px; display: flex; align-items: center;
+    justify-content: space-between; gap: 20px; flex-wrap: wrap;
+    box-shadow: 0 4px 20px rgba(30,95,163,0.3);
+  }
+  .cta-card-text h3 { font-size: 16px; margin-bottom: 5px; }
+  .cta-card-text p { font-size: 12px; opacity: 0.85; line-height: 1.5; }
+  .cta-card-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  .cta-btn {
+    padding: 9px 18px; border-radius: 8px; font-size: 12px; font-weight: 700;
+    text-decoration: none; white-space: nowrap; transition: all .15s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .cta-btn-primary { background: #64B5F6; color: #0d3d6e; }
+  .cta-btn-primary:hover { background: white; }
+  .cta-btn-ghost { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3); }
+  .cta-btn-ghost:hover { background: rgba(255,255,255,0.25); }
+
+  /* ADSENSE SLOTS */
+  .ad-slot {
+    background: #f8f9fa; border: 1.5px dashed var(--border);
+    border-radius: 10px; padding: 14px; text-align: center;
+    font-size: 11px; color: var(--muted); margin-bottom: 20px;
+    min-height: 90px; display: flex; align-items: center; justify-content: center;
+  }
+
+  /* BRAND WATERMARK */
+  .brand-sub { font-size: 9px; opacity: 0.55; display: block; line-height: 1; margin-top: 2px; letter-spacing: 0.5px; }
+
+  /* SOCIAL FOOTER */
+  .social-footer {
+    background: var(--blue-dark); color: white;
+    padding: 30px 20px; text-align: center;
+  }
+  .social-footer .sf-title { font-size: 15px; font-weight: 700; margin-bottom: 5px; }
+  .social-footer .sf-sub { font-size: 12px; opacity: 0.65; margin-bottom: 18px; }
+  .social-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+  .social-link {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 700;
+    text-decoration: none; transition: all .15s;
+  }
+  .sl-ig1 { background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); color: white; }
+  .sl-ig2 { background: #1a6fc4; color: white; }
+  .sl-yt  { background: #FF0000; color: white; }
+  .sl-li  { background: #0077B5; color: white; }
+  .social-link:hover { opacity: 0.85; transform: translateY(-2px); }
+  .sf-copy { font-size: 11px; opacity: 0.45; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<div class="promo-banner">
+  🚀 <strong>master.devops</strong> &nbsp;<span class="promo-sep">|</span>&nbsp; Daily DevOps tips &amp; interview prep
+  &nbsp;<span class="promo-sep">|</span>&nbsp;
+  <a href="https://www.instagram.com/master.devops/" target="_blank" rel="noopener">📸 Instagram</a>
+  &nbsp;<span class="promo-sep">·</span>&nbsp;
+  <a href="https://www.youtube.com/@master.devops" target="_blank" rel="noopener">▶️ YouTube</a>
+  &nbsp;<span class="promo-sep">·</span>&nbsp;
+  <a href="https://www.instagram.com/automation.script" target="_blank" rel="noopener">🤖 automation.script</a>
+</div>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">master<span>.devops</span><span class="brand-sub">SRE &amp; DevOps Interview Ref</span></div>
+    <div class="nav-scroll" id="nav"></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="page active" id="page-home">
+    <!-- TOPMATE CTA CARD -->
+    <div class="cta-card">
+      <div class="cta-card-text">
+        <h3>🎯 Crack Your Next DevOps / SRE Interview</h3>
+        <p>Daily tips, mock interviews &amp; 1:1 prep sessions by a working DevOps Engineer.<br>Follow for free content. Book a session for focused prep.</p>
+      </div>
+      <div class="cta-card-btns">
+        <a class="cta-btn cta-btn-primary" href="https://www.instagram.com/master.devops/" target="_blank" rel="noopener">📸 Follow @master.devops</a>
+        <a class="cta-btn cta-btn-ghost" href="https://www.youtube.com/@master.devops" target="_blank" rel="noopener">▶️ YouTube Shorts</a>
+      </div>
+    </div>
+
+    <!-- ADSENSE SLOT 1 (horizontal banner) — replace content with your ad code after approval -->
+    <div class="ad-slot">
+      <!-- Google AdSense Banner — Paste your ad unit code here after approval -->
+      <!-- <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins> -->
+      <span>📢 Ad space — <a href="mailto:contact@masterdevops.in" style="color:var(--blue)">Partner with master.devops</a></span>
+    </div>
+
+    <div class="home-hero">
+      <h1>🚀 DevOps &amp; SRE Interview Quick Reference</h1>
+      <p>Complete revision notes for all 18 tools — built by <strong>@master.devops</strong>. Click any card for key concepts, commands, and interview Q&amp;A.<br>
+      <small style="opacity:0.7">Follow <a href="https://www.instagram.com/master.devops/" target="_blank" rel="noopener" style="color:#64B5F6">@master.devops</a> on Instagram for daily tips &amp; new resources.</small></p>
+    </div>
+    <div style="background:white;border-radius:10px;padding:16px 20px;margin-bottom:20px;box-shadow:var(--shadow);border:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:13px;font-weight:700">Revision progress</span>
+        <span class="progress-label" id="prog-label">0 / 18 reviewed</span>
+      </div>
+      <div class="progress-bar-wrap"><div class="progress-bar" id="prog-bar" style="width:0%"></div></div>
+    </div>
+    <div class="tools-grid" id="tools-home-grid"></div>
+  </div>
+
+  <div class="page" id="page-tracker">
+    <div style="background:white;border-radius:12px;padding:24px;box-shadow:var(--shadow);margin-bottom:20px">
+      <h2 style="font-size:18px;margin-bottom:6px">Revision Tracker</h2>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Check off tools as you complete revision.</p>
+      <div class="progress-bar-wrap"><div class="progress-bar" id="prog-bar2" style="width:0%"></div></div>
+      <p class="progress-label" id="prog-label2">0 / 18</p>
+    </div>
+    <div class="tracker-grid" id="tracker-grid"></div>
+  </div>
+
+  <div class="page" id="page-strategy">
+    <div class="tool-header">
+      <h1>💡 How to Answer Any Interview Question</h1>
+      <p>The universal framework for DevOps/SRE interviews — especially security and availability questions.</p>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <h3>The 4-Step Answer Formula</h3>
+        <ul class="bullet-list">
+          <li><strong>1. State the risk/problem</strong> — "The main concern with X is..."</li>
+          <li><strong>2. Name the mechanism</strong> — "We handle this using Y feature/tool"</li>
+          <li><strong>3. Real example</strong> — "In my current project at State Farm, we..."</li>
+          <li><strong>4. Trade-off</strong> — "The downside is cost/complexity, balanced by..."</li>
+        </ul>
+        <div class="tip-box" style="margin-top:14px"><strong>When you blank:</strong> Say "Let me think through this from first principles..." — buys 5 seconds and signals structured thinking.</div>
+      </div>
+      <div class="card">
+        <h3>Security Answer Template</h3>
+        <div class="answer-template">
+          "To secure X, I focus on <span class="highlight">three layers: authentication/authorization, data in transit and at rest, and audit logging.</span> For Kubernetes, RBAC for auth, TLS/mTLS for in-cluster traffic, audit logs enabled. Secrets go through Vault — never in plain manifests."
+        </div>
+        <h3 style="margin-top:16px">Availability Answer Template</h3>
+        <div class="answer-template">
+          "Availability depends on <span class="highlight">eliminating single points of failure + fast recovery.</span> For Kubernetes: multi-AZ node pools, PodDisruptionBudgets, readiness probes, HPA. For databases: read replicas + automated failover. RTO/RPO targets drive which mechanisms I pick."
+        </div>
+      </div>
+    </div>
+    <div class="card one-col">
+      <h3>Deployment Strategy Cheat Sheet</h3>
+      <table class="concept-table">
+        <thead><tr><th>Strategy</th><th>How it works</th><th>Pros</th><th>Cons</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Rolling</strong></td><td>Replace pods gradually, N at a time</td><td>Zero downtime, low cost</td><td>Mixed versions temporarily</td></tr>
+          <tr><td><strong>Blue/Green</strong></td><td>Two identical envs, instant LB switch</td><td>Instant rollback</td><td>Doubles infra cost</td></tr>
+          <tr><td><strong>Canary</strong></td><td>Route 5%→25%→100% to new version</td><td>Minimal blast radius</td><td>Complex, slower</td></tr>
+          <tr><td><strong>Recreate</strong></td><td>Stop all, deploy new</td><td>Simple</td><td>Has downtime</td></tr>
+          <tr><td><strong>Feature flags</strong></td><td>Deploy disabled, enable per user</td><td>Decouple deploy from release</td><td>Code complexity</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card one-col">
+      <h3>SLI / SLO / SLA Quick Reference</h3>
+      <table class="concept-table">
+        <thead><tr><th>Term</th><th>What it is</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>SLI</strong></td><td>The metric you measure</td><td>% requests returning 200</td></tr>
+          <tr><td><strong>SLO</strong></td><td>Your internal target</td><td>99.9% success rate</td></tr>
+          <tr><td><strong>SLA</strong></td><td>Contract with customers</td><td>99.5% guaranteed (with penalties)</td></tr>
+          <tr><td><strong>Error Budget</strong></td><td>1 - SLO</td><td>0.1% = 43.8 min/month downtime allowed</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TOOL DETAIL PAGE (shared) -->
+  <div class="page" id="page-tool">
+    <button class="back-btn" onclick="goHome()">← Back to all tools</button>
+    <div id="tool-detail-content"></div>
+  </div>
+</div>
+
+<footer style="display:none"></footer>
+
+<!-- ADSENSE SLOT 2 (bottom of page) -->
+<div style="max-width:1400px;margin:0 auto;padding:0 20px 8px">
+  <div class="ad-slot">
+    <!-- Google AdSense Banner — Paste your ad unit code here -->
+    <!-- <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXX" data-ad-slot="YYYYYYYYYY" data-ad-format="auto" data-full-width-responsive="true"></ins> -->
+    <span>📢 Advertise here — <a href="https://www.instagram.com/master.devops/" style="color:var(--blue)" target="_blank" rel="noopener">DM @master.devops</a></span>
+  </div>
+</div>
+
+<!-- SOCIAL FOOTER -->
+<div class="social-footer">
+  <div class="sf-title">master.devops</div>
+  <div class="sf-sub">SDE | DevOps | SRE | Cloud Platforms — Helping engineers ace interviews</div>
+  <div class="social-links">
+    <a class="social-link sl-ig1" href="https://www.instagram.com/master.devops/" target="_blank" rel="noopener">
+      📸 @master.devops
+    </a>
+    <a class="social-link sl-ig2" href="https://www.instagram.com/automation.script" target="_blank" rel="noopener">
+      🤖 @automation.script
+    </a>
+    <a class="social-link sl-yt" href="https://www.youtube.com/@master.devops" target="_blank" rel="noopener">
+      ▶️ YouTube Shorts
+    </a>
+    <a class="social-link sl-li" href="https://www.linkedin.com/in/dhanushr/" target="_blank" rel="noopener">
+      💼 LinkedIn
+    </a>
+  </div>
+  <div class="sf-copy">© 2025 master.devops · Built with ❤️ for the DevOps community · All content original</div>
+</div>
+
+<script>
+const TOOLS = [
+  { id:'linux', name:'Linux', icon:'🐧', cat:'core',
+    overview:'Linux is the backbone of DevOps. Every server, container, and CI runner runs Linux. Be comfortable with file permissions, process management, networking, and log analysis from the CLI.',
+    sections:[
+      { title:'File Permissions', bullets:['chmod 755 = rwxr-xr-x (octal)','chmod u+x, g-w symbolic mode','chown user:group file — change ownership','umask 022 → files get 644, dirs get 755','Special bits: setuid(s), setgid(s), sticky(t)','find / -perm /4000 — find setuid files (security)'],
+        code:'ls -la /etc/passwd\nchmod 600 ~/.ssh/id_rsa\nfind /var/log -type f -mtime -1   # files modified last 24h\ndu -sh /var/log/*\ndf -hT                             # disk free with type' },
+      { title:'Process Management', bullets:['ps aux — all processes with CPU/mem','top / htop — live viewer','SIGTERM(15) = graceful; SIGKILL(9) = force','nice/renice — change priority (-20 highest, 19 lowest)','nohup command & — run after logout','systemctl: start/stop/restart/status/enable'],
+        code:'ps aux | grep java\nkill -9 $(lsof -t -i:8080)\nsystemctl status nginx\njournalctl -u nginx -f --since "1 hour ago"\nstrace -p PID                      # trace syscalls' },
+      { title:'Networking', bullets:['ss -tulnp — listening ports (modern netstat)','ip addr, ip route — interfaces and routing','curl -v, wget — HTTP testing','dig, nslookup — DNS debugging','traceroute / mtr — path tracing','iptables / ufw — firewall rules'],
+        code:'ss -tulnp | grep :8080\ncurl -v https://api.example.com/health\ndig +short api.example.com\nip route show' },
+    ],
+    qa:[
+      { q:'How do you find which process is using port 8080?', a:'ss -tulnp | grep :8080 (modern) or lsof -i :8080. Add sudo to see all processes. Get the PID, then ps -p PID for full details.' },
+      { q:'Hard link vs soft link?', a:'Hard link: another name for the same inode. Soft/symlink: pointer to a path. Hard links can\'t cross filesystems; soft links can. Deleting original file breaks symlink but not hard link.' },
+      { q:'How do you check memory usage?', a:'free -h for summary. cat /proc/meminfo for detail. top or htop for live per-process view. vmstat for memory + CPU + IO stats together.' },
+      { q:'How do you run a process after logout?', a:'nohup command & or inside a tmux/screen session. For persistent services, use systemd (systemctl enable --now myservice).' }
+    ],
+    tip:'Always prefer ss over netstat (netstat is deprecated in modern distros). Use journalctl with filters (-u, --since, -p err) over reading raw log files.' },
+
+  { id:'git', name:'Git', icon:'🌿', cat:'core',
+    overview:'Git is version control. DevOps interviews focus on branching strategies, history manipulation (rebase, revert, reset), collaboration workflows, and recovering from mistakes with reflog.',
+    sections:[
+      { title:'Core Concepts', bullets:['Working tree → Staging (index) → Local repo → Remote','HEAD = pointer to current commit/branch','Detached HEAD = HEAD points to SHA, not a branch','git fetch = download; git pull = fetch + merge','git stash = temporarily shelve uncommitted changes','git reflog = history of all HEAD movements (90 days)'],
+        code:'git log --oneline --graph --all\ngit diff HEAD~2 HEAD -- file.txt\ngit stash push -m "WIP feature-x"\ngit stash pop\ngit reflog                         # undo almost anything' },
+      { title:'Branching Strategies', bullets:['GitFlow: main/develop/feature/release/hotfix — suits release cycles','Trunk-based: short-lived branches, merge to main daily — suits CI/CD','GitHub Flow: feature → PR → merge to main → deploy','Branch protection: require PR reviews + status checks','CODEOWNERS: auto-assign reviewers by changed files'],
+        code:'git checkout -b feature/JIRA-123-auth\ngit rebase main                    # clean linear history\ngit merge --no-ff feature/x        # preserve merge commit\ngit cherry-pick abc1234' },
+      { title:'History Manipulation', bullets:['git rebase -i HEAD~3 — squash/reword/drop commits','git reset --soft HEAD~1 — undo commit, keep staged','git reset --mixed HEAD~1 — undo commit, keep unstaged','git reset --hard HEAD~1 — DANGER: discards changes','git revert sha — safe undo (creates new commit)','git bisect — binary search for bug-introducing commit'],
+        code:'git rebase -i HEAD~3\ngit revert HEAD --no-edit\ngit reset --soft HEAD~1\ngit bisect start\ngit bisect bad   # current is bad\ngit bisect good v1.0  # last known good' }
+    ],
+    qa:[
+      { q:'git rebase vs git merge?', a:'Merge preserves full history including branch topology. Rebase replays commits on top of another branch for a linear history. Use rebase for local feature branches before PR; merge for integrating completed work. Never rebase shared/public branches.' },
+      { q:'How do you revert a pushed commit?', a:'git revert <sha> creates a new commit undoing the change — safe for shared branches, keeps history intact. Never use git reset --hard on pushed commits unless you own the branch solo and force-push.' },
+      { q:'What is a detached HEAD?', a:'HEAD points to a commit SHA directly instead of a branch name. Changes are not tracked. Fix: git checkout -b new-branch to capture current work, or git checkout main to abandon.' },
+      { q:'How do you squash commits before a PR?', a:'git rebase -i HEAD~N, mark commits as "squash" or "s". Or git merge --squash feature-branch on target. Always squash WIP/fixup commits to keep main history clean.' }
+    ],
+    tip:'git reflog is your safety net — it tracks every HEAD movement for 90 days. If you think you\'ve lost work from a bad reset, check reflog first: git reflog show HEAD.' },
+
+  { id:'gha', name:'GitHub Actions', icon:'⚙️', cat:'core',
+    overview:'GitHub Actions is CI/CD built into GitHub. Workflows are YAML files in .github/workflows/. Master the structure, secrets management, caching, and OIDC for cloud authentication.',
+    sections:[
+      { title:'Workflow Structure', bullets:['on: trigger (push, pull_request, schedule, workflow_dispatch)','jobs: parallel units, each runs on a fresh runner','steps: sequential tasks inside a job, share workspace','uses: reference marketplace action or reusable workflow','run: inline shell command','needs: creates dependency between jobs (serial)'],
+        code:'on:\n  push:\n    branches: [main, "release/*"]\n  pull_request:\n    types: [opened, synchronize]\n  schedule:\n    - cron: "0 2 * * 1"   # Monday 2am\n  workflow_dispatch: {}   # manual with optional inputs' },
+      { title:'Secrets & OIDC', bullets:['secrets.MY_SECRET — org/repo/environment secrets','GITHUB_TOKEN — auto-provided, scoped to repo, expires post-job','OIDC: federate to AWS/Azure — no stored long-lived credentials','Environment secrets: scoped to prod/staging environments','permissions: — restrict GITHUB_TOKEN to minimum needed','Never echo secrets — avoid logging entirely'],
+        code:'permissions:\n  contents: read\n  id-token: write   # required for OIDC\n\nenv:\n  AWS_ROLE: ${{ secrets.AWS_ROLE_ARN }}\n\n- uses: aws-actions/configure-aws-credentials@v4\n  with:\n    role-to-assume: ${{ env.AWS_ROLE }}\n    aws-region: us-east-1' },
+      { title:'Optimization', bullets:['actions/cache — cache .m2, node_modules, pip between runs','Matrix builds — parallel testing across OS/versions','Reusable workflows — .github/workflows/shared.yml','Composite actions — bundle steps into reusable action','Concurrency groups — cancel stale runs on same branch','Self-hosted runners — private network or GPU workloads'],
+        code:'- uses: actions/cache@v3\n  with:\n    path: ~/.m2\n    key: ${{ runner.os }}-maven-${{ hashFiles("**/pom.xml") }}\n\nconcurrency:\n  group: ${{ github.workflow }}-${{ github.ref }}\n  cancel-in-progress: true' }
+    ],
+    qa:[
+      { q:'How do you trigger on a specific branch only?', a:'on: push: branches: [main] or on: pull_request: branches: [main]. Use glob patterns like "release/*". To exclude: branches-ignore: ["dependabot/**"].' },
+      { q:'How do you share data between jobs?', a:'Use actions/upload-artifact in one job and actions/download-artifact in the next. Jobs run on separate runners with no shared filesystem. Use outputs: for small string values between jobs via needs context.' },
+      { q:'Job vs step?', a:'Jobs run in parallel on separate runners by default (use needs: for serial). Steps run sequentially within a job, sharing the same runner, workspace, and environment variables.' },
+      { q:'How do you avoid storing cloud credentials as secrets?', a:'Use OIDC (OpenID Connect). Configure your cloud (AWS/Azure) to trust GitHub\'s OIDC provider. At runtime, GitHub issues a short-lived JWT; the cloud provider exchanges it for temporary credentials. Zero stored secrets.' }
+    ],
+    tip:'Use concurrency groups (cancel-in-progress: true) to cancel stale runs on the same PR. This saves runner minutes and gives faster feedback on the latest commit.' },
+
+  { id:'jenkins', name:'Jenkins', icon:'🏗️', cat:'core',
+    overview:'Jenkins is the most widely used open-source CI/CD server. Focus on Declarative Pipeline syntax, agent/controller architecture, shared libraries, and credentials management.',
+    sections:[
+      { title:'Architecture', bullets:['Controller (Master): orchestrates, stores config, serves UI','Agent (Worker): executes build steps on separate machines','Executor: a slot on an agent for running a build','Label: route jobs to specific agents (docker, linux, gpu)','Shared library: reusable Groovy code across all pipelines','JNLP or SSH to connect agents to controller'],
+        code:'// Declarative Pipeline structure:\npipeline {\n  agent { label "docker" }\n  environment { APP_ENV = "prod" }\n  stages {\n    stage("Build")  { steps { sh "mvn clean package -DskipTests" } }\n    stage("Test")   { steps { sh "mvn test" } }\n    stage("Docker") { steps { sh "docker build -t app:${BUILD_NUMBER} ." } }\n  }\n  post {\n    failure { mail to: "team@co.com", subject: "Build failed" }\n    always  { cleanWs() }\n  }\n}' },
+      { title:'Credentials & Security', bullets:['Credentials store: username/password, secret text, SSH key','withCredentials([]) — inject into a step, masked in logs','RBAC plugin — restrict job access by user/group','Audit Trail plugin — log all user actions','Never hardcode secrets in Jenkinsfile','Pipeline sandbox: script approval for trusted libraries'],
+        code:'withCredentials([usernamePassword(\n  credentialsId: "docker-hub",\n  usernameVariable: "USER",\n  passwordVariable: "PASS")]) {\n    sh "docker login -u $USER -p $PASS"\n}' }
+    ],
+    qa:[
+      { q:'Declarative vs Scripted Pipeline?', a:'Declarative uses a structured pipeline {} block with fixed sections — easier to read, syntax-validated by Jenkins, recommended. Scripted is pure Groovy — maximum flexibility but harder to maintain. Prefer Declarative; use scripted only for complex dynamic pipelines.' },
+      { q:'How do you trigger Jenkins from GitHub webhook?', a:'Install GitHub plugin. Configure webhook in GitHub repo: Payload URL = http://jenkins-url/github-webhook/. In job config, enable "GitHub hook trigger for GITScm polling". Jenkins receives POST on every push/PR.' },
+      { q:'What is a shared library?', a:'A Git repo with reusable Groovy code (vars/ for global steps, src/ for classes). Configure in Manage Jenkins > System. Import with @Library("my-lib") _. Call shared functions across all pipelines.' },
+      { q:'How do you handle secrets in Jenkins?', a:'Store in Jenkins Credentials Store (never in Jenkinsfile or Git). Inject using withCredentials() — values are masked in console output and scoped to the block only. Use credential binding plugin.' }
+    ],
+    tip:'Prefer Declarative over Scripted in interviews — it signals best practices. Mention shared libraries for scale — shows you think beyond single pipelines.' },
+
+  { id:'build', name:'Build Tools', icon:'🔨', cat:'core',
+    overview:'Maven and Gradle compile code, manage dependencies, run tests, and package artifacts. Understanding lifecycle phases and CI integration is key for any Java-based DevOps role.',
+    sections:[
+      { title:'Maven Lifecycle', bullets:['validate → compile → test → package → verify → install → deploy','Running mvn package runs all phases before it automatically','Scope: compile (default), test, provided (container supplies), runtime','SNAPSHOT = in-development (can change); RELEASE = immutable','Settings.xml: global config for mirrors, servers, proxies','distributionManagement: defines where mvn deploy sends artifacts'],
+        code:'mvn clean package                  # compile + test + jar\nmvn clean package -DskipTests      # skip tests for speed\nmvn dependency:tree                # full dependency tree\nmvn versions:display-dependency-updates\nmvn deploy -P production           # with profile' },
+      { title:'Gradle', bullets:['build.gradle (Groovy) or build.gradle.kts (Kotlin DSL)','Tasks = unit of work (more granular than Maven phases)','Incremental builds: only re-runs tasks with changed inputs','Gradle wrapper (gradlew) = consistent version across environments','Gradle daemon: keeps JVM warm for faster subsequent builds','Multi-project builds with settings.gradle'],
+        code:'./gradlew clean build\n./gradlew test --tests "*UserServiceTest*"\n./gradlew dependencies --configuration compileClasspath\n./gradlew bootJar                  # Spring Boot fat jar' }
+    ],
+    qa:[
+      { q:'What is the Maven build lifecycle?', a:'A sequence of phases: validate, compile, test, package, verify, install, deploy. Running mvn package automatically runs all prior phases. You bind plugin goals (e.g. surefire:test) to specific phases.' },
+      { q:'Compile vs runtime scope?', a:'Compile: needed to compile AND run (default). Runtime: not needed to compile but needed at runtime (e.g. JDBC driver). Provided: compile-time only, container supplies at runtime (e.g. servlet-api in Tomcat).' },
+      { q:'How do you speed up Maven builds in CI?', a:'Cache ~/.m2/repository between builds, use -T 4 for parallel module builds, -DskipTests for non-test pipeline stages, separate compile/test/package into distinct pipeline stages.' },
+      { q:'What is a BOM?', a:'Bill of Materials — a POM that defines consistent dependency versions. Import with <scope>import</scope> in dependencyManagement. Prevents version conflicts across multi-module projects.' }
+    ],
+    tip:'SNAPSHOT versions should never reach production. Artifact promotion (SNAPSHOT → RELEASE) should be gated by a fully passing pipeline. Mention this in interviews — it shows production awareness.' },
+
+  { id:'docker', name:'Docker', icon:'🐳', cat:'core',
+    overview:'Docker packages apps into portable containers. DevOps interviews focus on Dockerfile optimization, multi-stage builds, networking, volumes, and security hardening.',
+    sections:[
+      { title:'Dockerfile Best Practices', bullets:['Multi-stage builds: separate build/runtime, copy only artifacts','Use minimal base images: alpine, distroless, -slim variants','Order layers: least → most frequently changed (COPY code last)','Run as non-root: USER 1001 (never root in production)','Use .dockerignore: exclude node_modules, .git, build/','Pin versions: FROM node:20.11-alpine3.18 not node:latest'],
+        code:'FROM maven:3.9-eclipse-temurin-21 AS builder\nWORKDIR /app\nCOPY pom.xml .\nRUN mvn dependency:go-offline        # cache deps layer\nCOPY src ./src\nRUN mvn clean package -DskipTests\n\nFROM eclipse-temurin:21-jre-alpine\nUSER 1001\nCOPY --from=builder /app/target/*.jar app.jar\nENTRYPOINT ["java","-jar","app.jar"]' },
+      { title:'Networking & Storage', bullets:['bridge: default, isolated per container, DNS by name in same network','host: shares host network stack (no NAT overhead)','Bind mount: maps host path (dev/hot-reload use case)','Named volume: managed by Docker, persists across restarts','tmpfs: in-memory, cleared on stop (secrets, temp files)','docker network create mynet — custom bridge network'],
+        code:'docker network create app-net\ndocker run --network app-net --name db postgres:15\ndocker run --network app-net --name api myapp\n\ndocker run -v pgdata:/var/lib/postgresql/data postgres\ndocker run -v /host/data:/app/data:ro myapp  # read-only bind' }
+    ],
+    qa:[
+      { q:'CMD vs ENTRYPOINT?', a:'ENTRYPOINT = the executable. CMD = default arguments. If both set, CMD is appended to ENTRYPOINT. Use exec form (["java","-jar"]) not shell form — shell form wraps in /bin/sh -c, so SIGTERM doesn\'t reach your process, causing slow K8s shutdowns.' },
+      { q:'How do you reduce image size?', a:'Multi-stage builds (separate build and runtime stages), minimal base images (alpine/distroless), .dockerignore, combine RUN commands with && to reduce layers, remove build tools and cache in the same layer they\'re installed.' },
+      { q:'How do you secure a Docker container?', a:'Non-root user (USER directive), read-only filesystem (--read-only flag), drop all Linux capabilities (--cap-drop ALL, add-cap only what\'s needed), no privileged mode, scan with Trivy, resource limits (--memory, --cpus), use signed images.' },
+      { q:'What is a dangling image?', a:'An image with <none>:<none> tag — leftover from rebuilds when a new image takes the same tag. Clean with docker image prune. Dangling volumes (docker volume prune) are volumes no longer attached to any container.' }
+    ],
+    tip:'Use exec form for ENTRYPOINT: ["java","-jar","app.jar"] not java -jar app.jar. Shell form runs through /bin/sh -c — signals like SIGTERM don\'t reach your Java process, causing Kubernetes pods to always wait the full terminationGracePeriodSeconds.' },
+
+  { id:'k8s', name:'Kubernetes', icon:'☸️', cat:'core',
+    overview:'Kubernetes orchestrates containers at scale. For SRE/senior DevOps roles, go deep on workload types, networking, RBAC, health probes, and troubleshooting — not just basic kubectl.',
+    sections:[
+      { title:'Core Objects', bullets:['Pod: smallest unit — containers sharing network/storage','Deployment: manages ReplicaSet, rolling updates, rollbacks','StatefulSet: ordered stable pod names/storage (databases, Kafka)','DaemonSet: one pod per node (log agents, monitoring, CNI)','Job/CronJob: run-to-completion / scheduled batch','HPA: horizontal scale on CPU/mem/custom metrics'],
+        code:'kubectl rollout status deployment/api\nkubectl rollout undo deployment/api\nkubectl scale deployment/api --replicas=5\nkubectl set image deployment/api container=image:v2\nkubectl get events --sort-by=".lastTimestamp" -n ns' },
+      { title:'Networking', bullets:['ClusterIP: internal stable DNS (default)','NodePort: exposes on each node IP, port 30000-32767','LoadBalancer: provisions cloud LB (ELB/ALB on AWS)','Ingress: L7 HTTP routing, TLS termination, host/path rules','NetworkPolicy: pod-level firewall (requires CNI: Calico/Cilium)','CoreDNS: svc.namespace.svc.cluster.local resolution'],
+        code:'kubectl get svc -A\nkubectl port-forward svc/api 8080:80\nkubectl exec -it pod -- curl http://svc.ns.svc.cluster.local' },
+      { title:'Security & Reliability', bullets:['RBAC: Role/ClusterRole + RoleBinding/ClusterRoleBinding','ServiceAccount: pod identity within cluster','Liveness probe: restart container if fails','Readiness probe: remove from Service endpoints if fails','Startup probe: disable liveness for slow-starting apps','PodDisruptionBudget: min available during voluntary disruption'],
+        code:'kubectl auth can-i get pods --as=sa:ns:name\nkubectl create role reader --verb=get,list,watch --resource=pods\nkubectl create rolebinding sa-reader --role=reader --serviceaccount=ns:sa' }
+    ],
+    qa:[
+      { q:'What happens when a Pod crashes?', a:'Kubernetes restarts it with exponential backoff (10s, 20s, 40s up to 5min) — this is CrashLoopBackOff. Check logs with kubectl logs --previous. The Deployment\'s ReplicaSet maintains desired count by creating replacement pods.' },
+      { q:'Deployment vs StatefulSet?', a:'Deployments: stateless apps, pods are interchangeable, random names, any PVC. StatefulSets: stateful apps, stable ordered names (pod-0, pod-1), stable PVCs per pod, ordered startup/shutdown. Use StatefulSet for databases, Kafka, Redis clusters.' },
+      { q:'How do you ensure HA in Kubernetes?', a:'Multi-replica Deployments, PodDisruptionBudgets (min available during drain), topologySpreadConstraints (spread across AZs), readiness probes (remove from LB until ready), HPA for demand-based scaling, multi-AZ node groups.' },
+      { q:'How do you handle secrets securely?', a:'Don\'t store plain secrets in Git. Use HashiCorp Vault (Agent Injector or Vault Secrets Operator), Sealed Secrets (encrypted in Git), or cloud-native (AWS Secrets Manager + ASCP, Azure Key Vault + Secrets Provider CSI).' }
+    ],
+    tip:'Liveness vs Readiness is the #1 K8s interview trip-up. Liveness = restart the container. Readiness = remove from load balancer. A pod can be alive but not ready (still warming up). Misconfiguring them causes either unnecessary restarts or traffic to unready pods.' },
+
+  { id:'helm', name:'Helm', icon:'⛵', cat:'core',
+    overview:'Helm is the package manager for Kubernetes. Charts bundle templated K8s manifests with versioning and lifecycle management (install/upgrade/rollback). Think apt/yum for Kubernetes.',
+    sections:[
+      { title:'Chart Structure & Templating', bullets:['Chart.yaml: metadata (name, version, appVersion, dependencies)','values.yaml: default config, overridden per environment','templates/: Go-templated K8s manifests','_helpers.tpl: reusable named templates','{{ .Values.image.tag }} — access values','{{ .Release.Name }}, {{ .Release.Namespace }} — built-ins'],
+        code:'helm create myapp              # scaffold chart\nhelm lint ./myapp              # validate\nhelm template myapp ./myapp -f prod-values.yaml  # render locally\nhelm package ./myapp           # create .tgz' },
+      { title:'Lifecycle', bullets:['helm install <release> <chart> — first install','helm upgrade --install — idempotent (install if not exists)','helm rollback <release> <revision> — revert','helm history <release> — all revisions','helm uninstall <release> — delete release + resources','Hooks: pre-install, post-install, pre-upgrade, post-upgrade'],
+        code:'helm upgrade --install myapp ./myapp \\\n  --namespace prod \\\n  --create-namespace \\\n  -f values-prod.yaml \\\n  --set image.tag=${BUILD_NUMBER} \\\n  --wait --timeout 5m' }
+    ],
+    qa:[
+      { q:'What is Helm and why use it?', a:'Kubernetes package manager. Bundles related manifests into versioned charts with templating, enabling environment-specific config (values files), one-command rollback, and lifecycle hooks. Without Helm, you manage 10+ raw YAMLs with no history.' },
+      { q:'How do you roll back a Helm release?', a:'helm rollback <release> <revision>. Find revisions with helm history <release>. Helm stores release state as K8s Secrets in the namespace — rollback works even without re-running the pipeline.' },
+      { q:'values.yaml vs --set?', a:'values.yaml = defaults in Git. -f overrides.yaml = environment-specific file. --set = one-off or CI-injected (image tags). Precedence: --set > -f > values.yaml. Always prefer -f for environment config; reserve --set for CI-injected values.' },
+      { q:'What are Helm hooks?', a:'Jobs that run at lifecycle events: pre-install, post-install, pre-upgrade, post-upgrade, pre-delete. Common use: database migrations before upgrade, smoke tests after install. Controlled with helm.sh/hook annotations.' }
+    ],
+    tip:'Use helm upgrade --install in CI pipelines — it\'s idempotent. Works for first deploy and subsequent updates without separate if/else logic in your pipeline.' },
+
+  { id:'argocd', name:'ArgoCD', icon:'🔄', cat:'core',
+    overview:'ArgoCD is a GitOps CD tool for Kubernetes. It continuously syncs cluster state with Git declarations, making Git the single source of truth for all deployments.',
+    sections:[
+      { title:'GitOps Principles', bullets:['Declarative: desired state defined in Git as YAML/Helm/Kustomize','Versioned: Git history = deployment audit log','Automated: ArgoCD polls Git, reconciles drift','Self-healing: manual cluster changes are reverted to match Git','No CI push access to cluster — ArgoCD pulls from Git','Separation: CI builds/pushes image; ArgoCD deploys'],
+        code:'argocd app create myapp \\\n  --repo https://github.com/org/gitops.git \\\n  --path apps/myapp/overlays/prod \\\n  --dest-server https://kubernetes.default.svc \\\n  --dest-namespace prod\n\nargocd app sync myapp\nargocd app rollback myapp 3' },
+      { title:'Sync & Health Status', bullets:['Sync status: Synced / OutOfSync — does cluster match Git?','Health status: Healthy / Progressing / Degraded / Missing','Auto-sync: applies Git changes automatically (careful in prod)','Self-heal: reverts manual changes to match Git','Prune: removes cluster resources deleted from Git','App of Apps: root Application manages child Applications'] }
+    ],
+    qa:[
+      { q:'What is GitOps and how does ArgoCD implement it?', a:'GitOps = Git as single source of truth for infra and app state. ArgoCD watches a Git repo, compares desired state (Git) with actual (cluster), and reconciles differences automatically or on demand. Rollback = git revert.' },
+      { q:'Sync status vs health status?', a:'Sync: does cluster match Git? (Synced/OutOfSync). Health: are K8s resources healthy? (Healthy/Degraded). A resource can be Synced but Degraded (deployed but crashing). Always check both.' },
+      { q:'How do you handle secrets in GitOps?', a:'External Secrets Operator (fetch from Vault/AWS SM at runtime), Sealed Secrets (encrypted at rest in Git), or ArgoCD Vault Plugin. Never push plaintext K8s Secret manifests — base64 is encoding, not encryption.' },
+      { q:'How do you promote across environments?', a:'Separate Git paths per env (apps/dev, apps/staging, apps/prod). CI updates image tag in target env\'s values file and commits. ArgoCD detects the Git change and syncs. GitOps = promotion via pull request.' }
+    ],
+    tip:'In interviews, clearly separate CI and CD roles: CI builds, tests, pushes image, and updates the image tag in the GitOps repo. ArgoCD handles the actual K8s deployment. This clean separation is the core of GitOps.' },
+
+  { id:'sonar', name:'SonarQube', icon:'🔍', cat:'security',
+    overview:'SonarQube performs SAST (Static Application Security Testing) — analyzing source code for bugs, vulnerabilities, and code smells without running the application.',
+    sections:[
+      { title:'Core Concepts', bullets:['SAST: analysis of source code at rest (not running)','Quality Gate: pass/fail threshold that blocks the pipeline','Bug: likely to cause incorrect runtime behavior','Vulnerability: potential security weakness (exploitable)','Code Smell: maintainability issue (duplication, long methods)','Security Hotspot: needs human review — not necessarily a vulnerability','Coverage: % of code executed by tests (needs JaCoCo/pytest-cov)'],
+        code:'mvn clean verify sonar:sonar \\\n  -Dsonar.projectKey=myapp \\\n  -Dsonar.host.url=http://sonar:9000 \\\n  -Dsonar.login=${SONAR_TOKEN}\n\n# Jenkins: waitForQualityGate() in withSonarQubeEnv() block' }
+    ],
+    qa:[
+      { q:'What is a Quality Gate?', a:'A set of conditions code must meet to proceed. If any fails (e.g. coverage < 80%, new critical vulnerability), the gate fails and the pipeline is blocked. The "New code" period gates only on changes in the current branch/PR.' },
+      { q:'Bug vs Vulnerability vs Code Smell?', a:'Bug: likely incorrect runtime behavior. Vulnerability: security weakness exploitable by an attacker. Code Smell: not broken, hurts maintainability. Security Hotspot: code pattern that often leads to vulnerabilities but needs human judgment.' },
+      { q:'How do you integrate SonarQube into Jenkins?', a:'Install SonarQube Scanner plugin, configure server in Manage Jenkins. Wrap stage in withSonarQubeEnv("sonar"). Run mvn sonar:sonar. Follow with waitForQualityGate() step to block pipeline on gate result via webhook.' },
+      { q:'What is technical debt?', a:'SonarQube\'s estimated time to fix all code smells. Expressed in days/hours. A project with 10 days of debt needs 10 developer-days of cleanup. Helps teams prioritize maintainability work alongside feature work.' }
+    ],
+    tip:'Always clarify SonarQube does SAST (static, not running). For DAST (dynamic, against running app), mention OWASP ZAP. Knowing the distinction shows security depth.' },
+
+  { id:'owasp', name:'OWASP / DevSecOps', icon:'🛡️', cat:'security',
+    overview:'DevSecOps embeds security at every CI/CD stage — "shift-left". OWASP provides the industry standard vulnerability framework. Know the Top 10 and one tool per pipeline stage.',
+    sections:[
+      { title:'OWASP Top 10 (Key ones)', bullets:['A01 Broken Access Control: users accessing unauthorized resources','A02 Cryptographic Failures: weak encryption, secrets in code/logs','A03 Injection: SQL/NoSQL/command injection via unsanitized input','A05 Security Misconfiguration: default passwords, open ports, verbose errors','A06 Vulnerable Components: outdated libraries with known CVEs','A09 Security Logging Failures: insufficient audit trail'] },
+      { title:'DevSecOps Pipeline Stages', bullets:['Pre-commit: Gitleaks / truffleHog — secret scanning','SAST: SonarQube / Semgrep — static code analysis','SCA: OWASP Dependency-Check / Snyk — library CVE scanning','Image scan: Trivy / Grype — Docker layer CVE scanning','DAST: OWASP ZAP — testing the running application','Runtime: Falco — detect anomalous container behavior'],
+        code:'# Trivy image scan (fail on HIGH/CRITICAL):\ntrivy image --exit-code 1 --severity HIGH,CRITICAL myapp:latest\n\n# OWASP Dependency-Check (Maven, fail on CVSS >= 7):\nmvn org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=7\n\n# Gitleaks (pre-commit secret scan):\ngitleaks detect --source . --exit-code 1' }
+    ],
+    qa:[
+      { q:'Name 3 OWASP Top 10 and mitigations?', a:'1) Injection: use parameterized queries, never concatenate user input into SQL. 2) Broken Access Control: enforce server-side authorization, deny by default, never trust client-side checks. 3) Vulnerable Components: automate SCA in CI, set CVSS score thresholds to fail builds.' },
+      { q:'SAST vs DAST?', a:'SAST analyzes source code without running it (SonarQube, Semgrep) — finds logic/coding flaws early. DAST tests a running application via actual requests (OWASP ZAP, Burp Suite) — finds runtime/config issues. Both are needed in a complete DevSecOps pipeline.' },
+      { q:'How do you scan Docker images for vulnerabilities in CI?', a:'Use Trivy: trivy image --exit-code 1 --severity HIGH,CRITICAL <image>. Exit code 1 fails the pipeline on HIGH/CRITICAL CVEs. Scan at build time and also in the registry periodically (new CVEs are published daily).' },
+      { q:'How do you handle a critical CVE in production?', a:'1) Assess exploitability (is the path reachable?). 2) Apply WAF rule or runtime mitigation immediately. 3) Patch: update library version, rebuild image, deploy via pipeline. 4) Post-mortem: add scanning rule to detect class of issue. Use error budget to justify emergency change.' }
+    ],
+    tip:'Tell interviewers about "shift-left security" — catching issues in dev, not just at the perimeter. Structure your answer per pipeline stage: Gitleaks (pre-commit) → SonarQube (SAST) → Trivy (image) → ZAP (DAST) → Falco (runtime).' },
+
+  { id:'jfrog', name:'JFrog Artifactory', icon:'📦', cat:'security',
+    overview:'Artifactory is a universal artifact repository manager. It stores build outputs (JARs, Docker images, Helm charts) with version control, access control, and security scanning via Xray.',
+    sections:[
+      { title:'Repository Types', bullets:['Local: stores artifacts you upload (your builds)','Remote: proxy to external registry (Maven Central, Docker Hub) with caching','Virtual: aggregates local + remote under one URL (simplifies client config)','Federated: multi-site replication across Artifactory instances','Clients always point to virtual repo — Artifactory resolves transparently'] },
+      { title:'Artifact Promotion', bullets:['dev-local → staging-local → prod-local across environments','Promotion: copy/move artifact without rebuilding (same binary)','Build info: links artifacts to the CI build that produced them','Properties: tag artifacts with metadata (git.commit, status=promoted)','Xray: deep recursive CVE scanning + license compliance','AQL: query artifacts by properties, date, path'],
+        code:'# Promote via REST API:\ncurl -X POST https://repo/artifactory/api/build/promote/myapp/42 \\\n  -H "Content-Type: application/json" \\\n  -d \'{"status":"promoted","targetRepo":"prod-local"}\'\n\n# Maven deploy:\nmvn deploy -DaltDeploymentRepository=central::default::https://repo/libs-release' }
+    ],
+    qa:[
+      { q:'What is a virtual repository?', a:'An aggregation of local and remote repos under one URL. Clients configure one URL; Artifactory searches local first, then remote. Simplifies client config — no need to list multiple upstream sources.' },
+      { q:'How does artifact promotion work?', a:'The same binary moves dev-local → staging-local → prod-local without rebuilding. This guarantees the exact artifact tested in staging is what goes to production — a core DevOps principle.' },
+      { q:'What is JFrog Xray?', a:'Artifactory\'s integrated security scanner. Deep recursive scanning of stored artifacts (including inside JARs). Identifies CVEs and license compliance issues. Policies can block artifact download if thresholds are breached.' },
+      { q:'How do you integrate Artifactory with Maven?', a:'Set distributionManagement in pom.xml with Artifactory repo URL. Inject credentials via settings.xml (stored in Jenkins Credentials Store, never in source). Run mvn deploy.' }
+    ],
+    tip:'The key Artifactory concept: artifact promotion means the same binary tested in staging goes to production — never rebuild per environment. This is what prevents "works on my machine" style production failures.' },
+
+  { id:'prom', name:'Prometheus', icon:'📊', cat:'obs',
+    overview:'Prometheus is a pull-based metrics monitoring system. It scrapes /metrics endpoints, stores time-series data, evaluates alert rules via Alertmanager, and is queried with PromQL.',
+    sections:[
+      { title:'Metric Types', bullets:['Counter: monotonically increasing (request_total, errors_total) — never decreases','Gauge: goes up and down (memory_bytes, active_connections, queue_depth)','Histogram: samples in configurable buckets (request_duration_seconds)','Summary: calculates quantiles client-side (less flexible than histogram)','Never use rate() on a Gauge — it doesn\'t make sense','histogram_quantile(0.99, ...) for p99 latency'] },
+      { title:'PromQL', bullets:['rate(http_requests_total[5m]) — per-second rate, 5-min window','increase(http_requests_total[1h]) — total increase over 1h','sum by (status_code) (rate(metric[5m])) — group by label','histogram_quantile(0.99, rate(duration_bucket[5m])) — p99 latency','avg_over_time(cpu_usage[30m]) — time-averaged gauge','absent(up{job="api"}) — alert if target disappears'],
+        code:'# Alert rule:\n- alert: HighErrorRate\n  expr: |\n    rate(http_requests_total{status=~"5.."}[5m])\n    / rate(http_requests_total[5m]) > 0.05\n  for: 2m\n  labels:\n    severity: critical\n  annotations:\n    summary: "Error rate above 5% for 2 minutes"' }
+    ],
+    qa:[
+      { q:'How does Prometheus scrape metrics?', a:'Prometheus pulls (scrapes) the /metrics HTTP endpoint on each configured target at a regular interval (default 15s). Targets expose metrics in text format. No agents needed — the app exposes metrics, Prometheus collects them.' },
+      { q:'Counter vs Gauge?', a:'Counter only goes up (resets on process restart) — totals (requests, errors). Gauge goes up and down — current state (memory, connections, queue depth). Use rate() on counters; use avg_over_time() on gauges.' },
+      { q:'PromQL query for error rate?', a:'rate(http_requests_total{status=~"5.."}[5m]) for absolute errors/sec. As percentage: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) * 100.' },
+      { q:'How do you prevent alert storms?', a:'Use for: duration (alert must be firing N minutes before notifying). Alertmanager inhibition rules (suppress child alerts when parent fires). Silences during maintenance windows. Group_by in Alertmanager routes to group related alerts into one notification.' }
+    ],
+    tip:'Counter vs Gauge is the most common Prometheus interview question. If the value can decrease naturally → Gauge. If it only resets on restart → Counter. Use rate() on counters to get per-second rate.' },
+
+  { id:'grafana', name:'Grafana', icon:'📈', cat:'obs',
+    overview:'Grafana is the visualization layer. It connects to Prometheus, Loki, Tempo, CloudWatch, Azure Monitor and more — creating unified dashboards, alerts, and log/trace exploration.',
+    sections:[
+      { title:'Data Sources & Features', bullets:['Prometheus: metrics (most common pairing)','Loki: logs with LogQL — label-based, much cheaper than Elasticsearch','Tempo: distributed traces (Jaeger/Zipkin protocol)','CloudWatch / Azure Monitor: native cloud metrics','Variables/Templates: dropdown selectors filter all dashboard panels','Annotations: mark deployment events on time-series graphs'],
+        code:'# LogQL examples (Loki):\n{namespace="prod", app="api"} |= "ERROR"\n{app="api"} | json | status_code >= 500\nrate({app="api"} |= "ERROR" [5m])   # error rate from logs' },
+      { title:'Alerting & Dashboard-as-Code', bullets:['Alert rules: evaluate PromQL/LogQL, set threshold + for duration','Contact points: Slack, PagerDuty, email, webhook','Notification policies: route alerts to contact points by labels','Grafana as Code: store dashboard JSON in Git','Provision via ConfigMaps (grafana-dashboard-provider sidecar)','Or Grafana Terraform provider for full infra-as-code'] }
+    ],
+    qa:[
+      { q:'How do you create a Grafana dashboard from Prometheus?', a:'Add Prometheus as data source (URL of Prometheus). Create panel, write PromQL query, choose visualization type. Add template variables (e.g. label_values(up, namespace)) so one dashboard covers all environments.' },
+      { q:'What are Grafana variables?', a:'Template variables are dropdowns at the top of a dashboard. They inject values into all panel queries. Created from a PromQL query (e.g. label_values(up, namespace)) or custom list. Makes dashboards reusable across services/environments.' },
+      { q:'Grafana Loki vs Elasticsearch?', a:'Loki only indexes labels (not full log content) — much cheaper, uses object storage (S3/GCS). Elasticsearch indexes everything — full-text search but expensive storage and compute. Use Loki for operational logs; Elasticsearch when you need full-text search capabilities.' },
+      { q:'How do you set up alerting in Grafana?', a:'Define alert rules in Alerting > Alert rules (query + threshold + for duration). Configure contact points (Slack/PagerDuty). Set notification policies to route alerts to correct contact point based on labels (severity, team).' }
+    ],
+    tip:'Dashboard-as-code: store Grafana dashboards as JSON in Git and provision via ConfigMaps (grafana-dashboard-provider sidecar) or Terraform provider. This enables version-controlled dashboards deployed with ArgoCD.' },
+
+  { id:'splunk', name:'Splunk', icon:'🔭', cat:'obs',
+    overview:'Splunk is an enterprise log management and SIEM platform. It indexes machine data at scale and enables search, alerting, and dashboards via SPL (Search Processing Language).',
+    sections:[
+      { title:'Architecture', bullets:['Universal Forwarder (UF): lightweight, tails files, sends raw data','Heavy Forwarder (HF): parses/filters before sending (reduces indexer load)','Indexer: parses events, extracts timestamps/fields, stores in indexes','Search Head: web UI and SPL execution layer','Deployment Server: manages forwarder config at scale','Cluster: indexer cluster (replication) + SH cluster (HA search)'] },
+      { title:'SPL Essentials', bullets:['Pipeline: search | command1 | command2 | command3','stats count by field — aggregate','eval newfield=expression — compute field','rex field=_raw "pattern(?<name>...)" — regex field extract','timechart span=5m count by field — time-bucketed chart','top N field — most frequent values'],
+        code:'index=prod sourcetype=app_logs level=ERROR\n| stats count by host\n\nindex=nginx\n| rex field=_raw \'"(?P<method>\\w+) (?P<uri>[^ ]+)\'\n| timechart span=1h count by method\n\nindex=main earliest=-24h\n| stats avg(response_time) as avg_rt by sourcetype\n| sort -avg_rt' }
+    ],
+    qa:[
+      { q:'Universal vs Heavy Forwarder?', a:'Universal Forwarder (UF): lightweight, tails log files, sends raw data with minimal processing. Heavy Forwarder (HF): full Splunk capabilities, parses and filters before sending — use when you need to reduce volume or parse before indexing.' },
+      { q:'Write a basic SPL for error counts?', a:'index=main sourcetype=app level=ERROR | stats count by host | sort -count. This counts errors per host, sorted descending. Add | timechart span=5m count to visualize over time.' },
+      { q:'How does Splunk index data?', a:'Forwarder sends data to indexer. Indexer parses events (timestamp, source extraction, field extraction), applies index-time transforms, writes to index on disk (hot → warm → cold → frozen buckets by age).' },
+      { q:'How do you build an error rate alert?', a:'Create saved search: index=prod level=ERROR | stats count as errors. Schedule (e.g. every 5 min). Set trigger condition (errors > 100). Configure alert action (Slack webhook/PagerDuty). Enable throttling to prevent alert storms.' }
+    ],
+    tip:'Distinguish Splunk from Loki in interviews: Splunk is a full SIEM with compliance/forensics and enterprise support — high cost. Loki is lightweight/cheap but lacks SIEM features. Use Splunk when you need audit trails, compliance, or deep ad-hoc security analysis.' },
+
+  { id:'aws', name:'AWS', icon:'☁️', cat:'cloud',
+    overview:'AWS is the dominant cloud provider. Focus on compute (EC2/EKS), networking (VPC/SG/NACL), IAM (roles/IRSA), storage (S3/EBS/EFS), and HA architectural patterns.',
+    sections:[
+      { title:'Networking', bullets:['VPC: isolated virtual network, CIDR block (e.g. 10.0.0.0/16)','Public subnet: route to Internet Gateway (for ALB/NLB)','Private subnet: no internet route (app servers, databases)','NAT Gateway: private subnet → outbound internet (no inbound)','Security Group: stateful, instance-level, allow rules only','NACL: stateless, subnet-level, allow + deny, ordered evaluation'],
+        code:'# Common AWS CLI commands:\naws sts get-caller-identity\naws ec2 describe-instances --filters "Name=tag:Env,Values=prod"\naws eks update-kubeconfig --name mycluster --region us-east-1\naws s3 ls s3://mybucket --recursive --human-readable' },
+      { title:'IAM & EKS', bullets:['IAM Role: temporary credentials, assumed by services/users','Least privilege: start with no permissions, add minimum needed','IRSA: annotate K8s ServiceAccount with IAM role ARN via OIDC','EKS managed node groups: AWS manages node lifecycle','Fargate: serverless pods — no node management','Instance profile: EC2 role (avoid for EKS workloads — use IRSA)'],
+        code:'# Assume role:\naws sts assume-role \\\n  --role-arn arn:aws:iam::123456:role/MyRole \\\n  --role-session-name debug-session\n\n# EKS IRSA annotation:\nkubectl annotate sa myapp \\\n  eks.amazonaws.com/role-arn=arn:aws:iam::123:role/myrole' }
+    ],
+    qa:[
+      { q:'Security Group vs NACL?', a:'Security Group: stateful (return traffic auto-allowed), applied to ENI/instance, allow-only rules. NACL: stateless (both directions must be explicitly allowed), subnet-level, allow and deny rules, evaluated in number order. Use SG as primary defense; NACL for coarse subnet-level blocks.' },
+      { q:'How does IRSA work?', a:'EKS creates an OIDC provider. Annotate K8s ServiceAccount with IAM role ARN. AWS trusts OIDC tokens from EKS. Pods using that SA get temporary AWS credentials scoped to the IAM role. No node-level IAM roles needed — credentials are per-pod.' },
+      { q:'How do you achieve EC2 HA?', a:'Multi-AZ Auto Scaling Group + Application Load Balancer. Health checks replace failed instances. RDS Multi-AZ for database. ElastiCache cluster for stateless sessions. S3 for shared assets. Blue/green or rolling deployments for zero-downtime updates.' },
+      { q:'EBS vs EFS vs S3?', a:'EBS: block storage, single EC2 attachment, low latency (databases, OS). EFS: managed NFS, multi-EC2 mount simultaneously (shared config, CMS content). S3: object storage, unlimited scale, web-accessible, not mountable as filesystem (backups, static assets, data lake).' }
+    ],
+    tip:'IRSA is the AWS best practice for EKS workloads needing AWS access. Never assign broad IAM roles to EC2 nodes and rely on node-level credentials — it violates least privilege. IRSA scopes AWS credentials to individual pods.' },
+
+  { id:'azure', name:'Azure', icon:'🔷', cat:'cloud',
+    overview:'Azure is Microsoft\'s cloud. Focus on AKS, networking (VNet/NSG/App Gateway), identity (Managed Identity/Workload Identity), and the DevOps toolchain (Azure Pipelines, ACR).',
+    sections:[
+      { title:'AKS & Networking', bullets:['AKS: managed K8s, control plane free, pay for agent nodes only','Node pools: system (system pods) + user (app workloads)','Azure CNI: pods get real VNet IPs (routable, uses more IPs)','Kubenet: pods get overlay IPs behind NAT (simpler, limited routing)','NSG: stateful L4 firewall on NIC or subnet (like AWS Security Group)','Application Gateway: L7 HTTP/HTTPS routing, WAF, SSL termination'] },
+      { title:'Identity', bullets:['Managed Identity: Azure-assigned, no credentials to manage','System-assigned: tied to resource lifecycle (deleted with resource)','User-assigned: independent lifecycle, shareable across resources','Workload Identity: AKS pod-level via OIDC federation (modern approach)','Entra ID (formerly Azure AD): identity provider for Azure and M365','Azure RBAC: controls access to Azure resources (separate from Entra ID roles)'],
+        code:'# Assign managed identity to VM:\naz vm identity assign --name myvm --resource-group myrg\n\n# AKS Workload Identity:\naz identity federated-credential create \\\n  --name myapp \\\n  --identity-name myapp-identity \\\n  --issuer ${AKS_OIDC_ISSUER} \\\n  --subject system:serviceaccount:mynamespace:myapp-sa' }
+    ],
+    qa:[
+      { q:'Azure RBAC vs Entra ID roles?', a:'Azure RBAC controls access to Azure resources (VMs, storage, AKS subscriptions). Entra ID roles control identity/directory operations (manage users, groups, app registrations). Different systems — someone can be Contributor (RBAC) and User Administrator (Entra ID) simultaneously.' },
+      { q:'Managed Identity vs Service Principal?', a:'Managed Identity: Azure manages credentials, no rotation needed, no leak risk. Service Principal: explicit app registration with client secret/cert that you manage and must rotate. Always prefer Managed Identity for Azure-to-Azure authentication.' },
+      { q:'Azure Load Balancer vs Application Gateway?', a:'Azure Load Balancer: L4 TCP/UDP, no HTTP awareness, cheapest, fastest. Application Gateway: L7 HTTP/HTTPS, path-based routing, host-based routing, WAF, SSL termination. Use App Gateway when you need URL-based routing or WAF protection.' },
+      { q:'Azure CNI vs Kubenet in AKS?', a:'Azure CNI: pods get real VNet IPs, direct routing from VNet, better performance, required for Windows nodes. Kubenet: overlay IPs, more pods per node (simpler IP management), limited pod-to-pod routing outside cluster. Use Azure CNI for production.' }
+    ],
+    tip:'Workload Identity is the modern AKS pod identity solution (replaces deprecated AAD Pod Identity). It uses OIDC federation between AKS and Entra ID — analogous to AWS IRSA. Mentioning this shows you\'re current.' },
+
+  { id:'sre', name:'DevOps / SRE Concepts', icon:'🎯', cat:'core',
+    overview:'SRE applies software engineering to operations. SLOs, error budgets, toil reduction, and incident management are the conceptual frameworks that senior DevOps/SRE interviewers probe deeply.',
+    sections:[
+      { title:'SLI / SLO / SLA / Error Budgets', bullets:['SLI: the metric you measure (% successful requests, p99 latency)','SLO: your internal target (99.9% success rate)','SLA: external contract with penalties (99.5% guaranteed)','Error budget = 1 - SLO = 0.1% = 43.8 min/month downtime','Healthy budget: move fast, deploy often','Exhausted budget: freeze changes, focus on reliability'],
+        code:'# Burn rate alert (consume budget 2x faster than sustainable):\n- alert: HighBurnRate\n  expr: |\n    rate(http_requests_total{status=~"5.."}[1h])\n    / rate(http_requests_total[1h]) > 2 * (1-0.999)\n  for: 5m' },
+      { title:'Incident Management & Deployments', bullets:['MTTR: Mean Time To Recover (incident start → resolution)','MTTF: Mean Time To Failure (average uptime between failures)','MTBF: Mean Time Between Failures = MTTF + MTTR','Blameless post-mortem: focus on systems/processes, not individuals','Toil: manual, repetitive, automatable work that scales with service growth','Runbook automation: codify operational procedures as scripts/workflows'] }
+    ],
+    qa:[
+      { q:'Difference between SLI, SLO, and SLA?', a:'SLI = what you measure (99.95% of requests returned 200). SLO = your internal target (must maintain 99.9%). SLA = customer contract (guarantee 99.5%, with credits if breached). SLO threshold > SLA threshold gives you buffer to fix issues before SLA is violated.' },
+      { q:'What is an error budget and how do you use it?', a:'Error budget = allowed failure quota (0.1% for 99.9% SLO = 43.8 min/month downtime). Ample budget: deploy features faster, take risk. Exhausted budget: freeze non-critical changes, all hands on reliability. This aligns Dev and Ops incentives.' },
+      { q:'Blue-green vs canary deployment?', a:'Blue-green: two full environments, instant LB switch, instant rollback, doubles infra cost. Canary: gradual rollout (5%→25%→100%), minimal blast radius, needs traffic splitting (Ingress/Istio), slower but safer. Choose canary for high-traffic critical services.' },
+      { q:'What does a blameless post-mortem look like?', a:'Structured doc: timeline of events, root cause (5 Whys), contributing factors, impact (users affected, revenue), immediate mitigations applied, action items with owners + dates. Focus on what system/process failed, not who made a mistake.' },
+      { q:'What is toil and how do you reduce it?', a:'Manual, repetitive, automatable work that scales linearly with service growth (restarting pods, adding capacity, rotating credentials). Reduce by automating with scripts/pipelines, self-healing (HPA, liveness probes), and runbook automation. SRE goal: toil < 50% of time.' }
+    ],
+    tip:'The SLO/error budget framework separates SRE from traditional Ops. Frame reliability decisions in error budget terms: "We had 20% of our error budget remaining, so we proceeded with the deployment." This signals SRE thinking.' }
+];
+
+const CAT_MAP = { core:'Core DevOps', security:'Security & Quality', obs:'Observability', cloud:'Cloud' };
+const CAT_CLASS = { core:'cat-core', security:'cat-security', obs:'cat-obs', cloud:'cat-cloud' };
+
+let done = new Set(JSON.parse(localStorage.getItem('devops-done') || '[]'));
+
+function saveDone() { try { localStorage.setItem('devops-done', JSON.stringify([...done])); } catch(e){} }
+function updateProgress() {
+  const pct = (done.size/TOOLS.length*100).toFixed(0);
+  ['prog-bar','prog-bar2'].forEach(id => { const el=document.getElementById(id); if(el) el.style.width=pct+'%'; });
+  ['prog-label','prog-label2'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=`${done.size} / ${TOOLS.length} reviewed`; });
+}
+
+// NAV
+const navEl = document.getElementById('nav');
+const navPages = [
+  { id:'home', label:'🏠 Home' },
+  ...TOOLS.map(t => ({ id:`tool-${t.id}`, label:`${t.icon} ${t.name}`, toolId: t.id })),
+  { id:'tracker', label:'✅ Tracker' },
+  { id:'strategy', label:'💡 How to Answer' }
+];
+navPages.forEach(p => {
+  const btn = document.createElement('div');
+  btn.className = 'nav-btn' + (p.id==='home' ? ' active' : '');
+  btn.textContent = p.label;
+  btn.onclick = () => {
+    if (p.toolId) openTool(p.toolId);
+    else showPage(p.id);
+  };
+  btn.id = `nav-${p.id}`;
+  navEl.appendChild(btn);
+});
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const page = document.getElementById('page-' + pageId);
+  if (page) page.classList.add('active');
+  const navBtn = document.getElementById('nav-' + pageId);
+  if (navBtn) navBtn.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function goHome() { showPage('home'); }
+
+// HOME GRID
+const homeGrid = document.getElementById('tools-home-grid');
+TOOLS.forEach(t => {
+  const card = document.createElement('div');
+  card.className = 'tool-card';
+  card.innerHTML = `<div class="tool-icon">${t.icon}</div><div class="tool-name">${t.name}</div><div class="tool-cat">${CAT_MAP[t.cat]}</div><div class="cat-badge ${CAT_CLASS[t.cat]}">${CAT_MAP[t.cat]}</div>`;
+  card.onclick = () => openTool(t.id);
+  homeGrid.appendChild(card);
+});
+
+// TRACKER
+const trackerGrid = document.getElementById('tracker-grid');
+TOOLS.forEach(t => {
+  const item = document.createElement('div');
+  item.className = 'tracker-item' + (done.has(t.id) ? ' done' : '');
+  item.id = `track-${t.id}`;
+  item.innerHTML = `<span class="tracker-icon">${t.icon}</span><span class="tracker-name">${t.name}</span><span class="tracker-check">${done.has(t.id)?'✓':''}</span>`;
+  item.onclick = () => {
+    if (done.has(t.id)) { done.delete(t.id); item.classList.remove('done'); item.querySelector('.tracker-check').textContent=''; }
+    else { done.add(t.id); item.classList.add('done'); item.querySelector('.tracker-check').textContent='✓'; }
+    saveDone(); updateProgress();
+  };
+  trackerGrid.appendChild(item);
+});
+
+// TOOL DETAIL
+function openTool(id) {
+  const t = TOOLS.find(x => x.id === id);
+  if (!t) return;
+  const content = document.getElementById('tool-detail-content');
+
+  let sectionsHtml = '';
+  if (t.sections) {
+    t.sections.forEach((sec, i) => {
+      sectionsHtml += `<div class="card one-col">
+        <h3>${sec.title}</h3>
+        <ul class="bullet-list">${sec.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>
+        ${sec.code ? `<div class="code-block"><pre>${sec.code}</pre></div>` : ''}
+      </div>`;
+    });
+  }
+
+  const qaHtml = t.qa.map((qa, i) => `
+    <div class="qa-item" id="qa-${id}-${i}">
+      <div class="qa-question" onclick="toggleQA('${id}',${i})">
+        <span>${qa.q}</span><span class="qa-toggle">+</span>
+      </div>
+      <div class="qa-answer">${qa.a}</div>
+    </div>
+  `).join('');
+
+  const doneBtn = done.has(id)
+    ? `<button onclick="markDone('${id}',false,this)" style="padding:8px 18px;border:1.5px solid var(--green);background:var(--green-light);color:var(--green);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">✓ Marked as reviewed</button>`
+    : `<button onclick="markDone('${id}',true,this)" style="padding:8px 18px;border:1.5px solid var(--blue);background:white;color:var(--blue);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">Mark as reviewed</button>`;
+
+  content.innerHTML = `
+    <div class="tool-header">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+        <div>
+          <h1>${t.icon}  ${t.name}</h1>
+          <div style="margin:6px 0"><span class="cat-badge ${CAT_CLASS[t.cat]}">${CAT_MAP[t.cat]}</span></div>
+          <p style="margin-top:10px">${t.overview}</p>
+        </div>
+        <div id="done-btn-wrap">${doneBtn}</div>
+      </div>
+    </div>
+    ${sectionsHtml}
+    <div class="card one-col">
+      <h3>Interview Q&A — Click to reveal answers</h3>
+      ${qaHtml}
+    </div>
+    <div class="tip-box" style="margin-top:0">
+      <strong>💡 Interview tip:</strong> ${t.tip}
+    </div>
+    <div style="height:40px"></div>
+    <!-- ADSENSE SLOT 3 (tool detail, after content) -->
+    <div class="ad-slot" style="margin-top:0">
+      <!-- <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXX" data-ad-slot="ZZZZZZZZZZ" data-ad-format="auto"></ins> -->
+      <span>📢 Ad space · <a href="https://www.instagram.com/master.devops/" style="color:var(--blue)" target="_blank" rel="noopener">Partner with @master.devops</a></span>
+    </div>
+    <div style="background:var(--blue-light);border-radius:10px;padding:14px 20px;font-size:12px;color:var(--blue);text-align:center;margin-bottom:20px">
+      💡 Found this useful? Follow <a href="https://www.instagram.com/master.devops/" target="_blank" rel="noopener" style="font-weight:700;color:var(--blue-dark)">@master.devops</a> on Instagram for daily interview tips &amp; 
+      <a href="https://www.youtube.com/@master.devops" target="_blank" rel="noopener" style="font-weight:700;color:var(--blue-dark)">YouTube Shorts</a> on K8s, Docker, AWS &amp; more.
+    </div>
+  `;
+
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-tool').classList.add('active');
+  const navBtn = document.getElementById(`nav-tool-${id}`);
+  if (navBtn) navBtn.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function toggleQA(toolId, idx) {
+  const item = document.getElementById(`qa-${toolId}-${idx}`);
+  if (item) item.classList.toggle('open');
+}
+
+function markDone(id, isDone, btn) {
+  if (isDone) {
+    done.add(id);
+    btn.textContent = '✓ Marked as reviewed';
+    btn.style.background = 'var(--green-light)';
+    btn.style.color = 'var(--green)';
+    btn.style.borderColor = 'var(--green)';
+    btn.onclick = () => markDone(id, false, btn);
+    const trackerItem = document.getElementById(`track-${id}`);
+    if (trackerItem) { trackerItem.classList.add('done'); trackerItem.querySelector('.tracker-check').textContent='✓'; }
+  } else {
+    done.delete(id);
+    btn.textContent = 'Mark as reviewed';
+    btn.style.background = 'white';
+    btn.style.color = 'var(--blue)';
+    btn.style.borderColor = 'var(--blue)';
+    btn.onclick = () => markDone(id, true, btn);
+    const trackerItem = document.getElementById(`track-${id}`);
+    if (trackerItem) { trackerItem.classList.remove('done'); trackerItem.querySelector('.tracker-check').textContent=''; }
+  }
+  saveDone();
+  updateProgress();
+}
+
+updateProgress();
+</script>
+</body>
+</html>
