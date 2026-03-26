@@ -38,6 +38,9 @@ Desktop.ini
 # TypeScript cache
 *.tsbuildinfo
 
+# Vite cache
+.vite/
+
 # Coverage
 coverage/
 
